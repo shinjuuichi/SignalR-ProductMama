@@ -9,19 +9,19 @@ namespace SignalR_ProductManagement.Controllers
     public class CategoryController(ApplicationDbContext _dbContext) : ControllerBase
     {
         [HttpPost("add")]
-        public IActionResult Add([FromBody] string categoryName)
+        public async Task<IActionResult> Add([FromBody] string categoryName)
         {
             var category = new Category
             {
                 Name = categoryName
             };
-            _dbContext.Category.Add(category);  
-            _dbContext.SaveChanges();
+            await _dbContext.Category.AddAsync(category);
+            await _dbContext.SaveChangesAsync();
             return Ok(category);
         }
 
         [HttpPatch("update")]
-        public IActionResult Update([FromBody] Category updatedCategory)
+        public async Task<IActionResult> Update([FromBody] Category updatedCategory)
         {
             var category = _dbContext.Category.Find(updatedCategory.Id);
             if (category == null)
@@ -31,13 +31,13 @@ namespace SignalR_ProductManagement.Controllers
 
             category.Name = updatedCategory.Name;
             _dbContext.Category.Update(category);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             return Ok(category);
         }
 
         [HttpDelete("delete/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var category = _dbContext.Category.Find(id);
             if (category == null)
@@ -46,7 +46,7 @@ namespace SignalR_ProductManagement.Controllers
             }
 
             _dbContext.Category.Remove(category);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return Ok();
         }
     }

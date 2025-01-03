@@ -12,9 +12,14 @@ namespace SignalR_ProductManagement.Controllers
     public class ProductController(ApplicationDbContext _dbContext) : ControllerBase
     {
         [HttpPost("add")]
-        public IActionResult Add([FromBody] ProductAddDTO productAddDTO)
+        public async Task<IActionResult> Add([FromBody] ProductAddDTO productAddDTO)
         {
-            var category = _dbContext.Category.Find(productAddDTO.CategoryId);
+            var category = await _dbContext.Category.FindAsync(productAddDTO.CategoryId);
+
+            if (category == null)
+            {
+                return NotFound("Category not found.");
+            }
 
             var product = new Product
             {
@@ -24,28 +29,39 @@ namespace SignalR_ProductManagement.Controllers
                 Category = category,
             };
 
-            _dbContext.Product.Add(product);
-            _dbContext.SaveChanges();
+            await _dbContext.Product.AddAsync(product);
+            await _dbContext.SaveChangesAsync();
             return Ok(product);
         }
 
         [HttpPatch("update")]
-        public IActionResult Update([FromBody] ProductUpdateDTO productUpdateDTO)
+        public async Task<IActionResult> Update([FromBody] ProductUpdateDTO productUpdateDTO)
         {
             var product = _dbContext.Product.Find(productUpdateDTO.Id);
 
-            product.Name = productUpdateDTO.Name;   
+            if (product == null)
+            {
+                return NotFound("Product not found.");
+            }
+
+            product.Name = productUpdateDTO.Name;
             product.Price = productUpdateDTO.Price;
             product.Quantity = productUpdateDTO.Quantity;
-            product.Category = _dbContext.Category.Find(productUpdateDTO.CategoryId);
+            var category = await _dbContext.Category.FindAsync(productUpdateDTO.CategoryId);
+
+            if (category == null)
+            {
+                return NotFound("Category not found.");
+            }
+            product.Category = category;
 
             _dbContext.Product.Update(product);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return Ok(product);
         }
 
         [HttpDelete("delete/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var product = _dbContext.Product.Find(id);
 
@@ -55,7 +71,7 @@ namespace SignalR_ProductManagement.Controllers
             }
 
             _dbContext.Product.Remove(product);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return Ok(product);
         }
     }
