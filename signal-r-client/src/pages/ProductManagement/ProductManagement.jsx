@@ -52,6 +52,7 @@ const ProductManagement = () => {
 						<TableCell width={'20%'}>Id</TableCell>
 						<TableCell width={'20%'}>Name</TableCell>
 						<TableCell width={'20%'}>Price</TableCell>
+						<TableCell width={'20%'}>Quantity</TableCell>
 						<TableCell width={'20%'}>Category</TableCell>
 						<TableCell width={'20%'}>Actions</TableCell>
 					</TableRow>
@@ -61,6 +62,7 @@ const ProductManagement = () => {
 						<TableRow key={product.id}>
 							<TableCell>{product.id}</TableCell>
 							<TableCell>{product.name}</TableCell>
+							<TableCell>{product.quantity}</TableCell>
 							<TableCell>${product.price}</TableCell>
 							<TableCell>{product.category?.name}</TableCell>
 							<TableCell>

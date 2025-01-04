@@ -30,7 +30,7 @@ const Product = () => {
 				<TableRow>
 					<TableCell width={'20%'}>Id</TableCell>
 					<TableCell width={'20%'}>Name</TableCell>
-					<TableCell width={'20%'}>Description</TableCell>
+					<TableCell width={'20%'}>Quantity</TableCell>
 					<TableCell width={'20%'}>Price</TableCell>
 					<TableCell width={'20%'}>Category</TableCell>
 				</TableRow>
