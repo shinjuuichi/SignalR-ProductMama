@@ -6,11 +6,22 @@ const Product = () => {
 	const [products, setProducts] = useState([])
 
 	useEffect(() => {
-		const connection = SignalRService.ProductHub
-		connection.invoke('GetProduct')
-		connection.on('ReceiveProducts', (products) => {
+		const connectionPro = SignalRService.ProductHub
+		connectionPro.invoke('GetProduct')
+		connectionPro.on('ReceiveProducts', (products) => {
 			setProducts(products)
 		})
+
+		const connectionCate = SignalRService.CategoryHub
+		connectionCate.invoke('GetCategory')
+		connectionCate.on('ReceiveCategories', () => {
+			connectionPro.invoke('GetProduct')
+		})
+
+		return () => {
+			connectionPro.off('ReceiveProducts')
+			connectionCate.off('ReceiveCategories')
+		}
 	}, [])
 
 	return (
@@ -19,7 +30,7 @@ const Product = () => {
 				<TableRow>
 					<TableCell width={'20%'}>Id</TableCell>
 					<TableCell width={'20%'}>Name</TableCell>
-					<TableCell width={'20%'}>Description</TableCell>
+					<TableCell width={'20%'}>Quantity</TableCell>
 					<TableCell width={'20%'}>Price</TableCell>
 					<TableCell width={'20%'}>Category</TableCell>
 				</TableRow>

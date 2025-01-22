@@ -1,0 +1,6 @@
+services:
+  signalr-productmanagement:
+    image: ${DOCKER_REGISTRY-}signalrproductmanagement
+    build:
+      context: .
+      dockerfile: SignalR-ProductManagement/Dockerfile
