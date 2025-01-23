@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    image: signalr-productmanagement:latest
+    build:
+      context: .
+      dockerfile: SignalR-ProductManagement/Dockerfile
+    ports:
+      - '8080:8080'
+      - '8081:8081'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    restart: always
+    depends_on:
+      - sqlserver
+
+  frontend:
+    build:
+      context: ./signal-r-client
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./signal-r-client:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: ['yarn', 'start']
+    restart: always
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlservercom
+    ports:
+      - '1400:1433'
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Shinjuuichidesu@11
+    restart: always
