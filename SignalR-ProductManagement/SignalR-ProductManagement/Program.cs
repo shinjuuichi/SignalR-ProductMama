@@ -3,20 +3,19 @@ using SignalR_ProductManagement.Data;
 using SignalR_ProductManagement.SignalR;
 var builder = WebApplication.CreateBuilder(args);
 
-var apiPolicy = "SignalR-policy";
 
 builder.Services.AddInfrastructureService();
 builder.Services.AddWebAPIService();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(apiPolicy, policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
-       .AllowAnyMethod()
-       .AllowAnyHeader()
-       .AllowCredentials();
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
+
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
@@ -25,7 +24,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(apiPolicy);
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 
@@ -34,4 +33,4 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseApplicationHubs();
 
-    app.Run();
+app.Run();

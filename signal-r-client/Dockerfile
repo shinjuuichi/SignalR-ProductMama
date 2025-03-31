@@ -1,21 +1,10 @@
-# syntax=docker/dockerfile:1
-
-ARG NODE_VERSION=20.17.0
-
-# Use node image for development
-FROM node:${NODE_VERSION}-alpine
-
-# Set the working directory
+FROM node:lts-alpine
+ENV NODE_ENV=production
 WORKDIR /usr/src/app
-
-# Copy package.json and yarn.lock for dependency installation
-COPY package.json yarn.lock ./
-
-# Install all dependencies (including devDependencies for development)
-RUN yarn install
-
-# Expose the development server port
+COPY ["package.json", "yarn.lock", "./"]
+RUN yarn install --production --silent
+COPY . .
 EXPOSE 3000
-
-# Use CMD to start the React development server
+RUN chown -R node /usr/src/app
+USER node
 CMD ["yarn", "start"]
